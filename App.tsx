@@ -1,8 +1,9 @@
 import React from "react";
+import "react-native-gesture-handler";
 import { Home } from "./src/screens/Home";
 import { ThemeProvider } from "styled-components";
 // import { useFonts } from "expo-font";
-import { CarDetails } from "./src/screens/CarDetails";
+import { Routes } from "./src/routes";
 
 import {
   useFonts,
@@ -17,6 +18,7 @@ import {
 import AppLoading from "expo-app-loading";
 import { theme } from "./styles/theme";
 import { StatusBar } from "react-native";
+import { ScheludingDetails } from "./src/screens/ScheludingDetails";
 
 export default function App() {
   const [fontsLoaded] = useFonts({
@@ -37,7 +39,7 @@ export default function App() {
           backgroundColor="transparent"
           translucent
         ></StatusBar>
-        <CarDetails />
+        <Routes />
       </ThemeProvider>
     );
   }
