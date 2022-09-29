@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 
-import { format } from "date-fns";
+import { format, parseISO } from "date-fns";
 
 import { useTheme } from "styled-components";
 import {
@@ -75,14 +75,13 @@ export function ScheludingDetails() {
 
   useEffect(() => {
     setRentalPeriod({
-      start: format(getPlatformDate(new Date(dates[0])), "dd/MM/yyyy"),
+      start: format(getPlatformDate(parseISO(dates[0])), "dd/MM/yyyy"),
       end: format(
-        getPlatformDate(new Date(dates[dates.length - 1])),
+        getPlatformDate(parseISO(dates[dates.length - 1])),
         "dd/MM/yyyy"
       ),
     });
-  });
-
+  }, []);
   return (
     <Container>
       <Header>
