@@ -47,6 +47,8 @@ import {
 } from "./styles";
 import { CarDto } from "../../dtos/carDTO";
 import { getPlatformDate } from "../../utils/getPlatformDate";
+import { api } from "../../services/api";
+import { Alert } from "react-native";
 interface Params {
   car: CarDto;
   dates: string[];
@@ -64,9 +66,33 @@ export function ScheludingDetails() {
   const theme = useTheme();
   const route = useRoute();
   const { car, dates } = route.params as Params;
+  const rentTotal = Number(dates.length * car.rent.price);
 
-  function handleScheludingComplete() {
-    navigation.navigate("ScheludingComplete");
+  async function handleScheludingComplete() {
+    const schedulesByCar = await api.get(`/schedules_bycars/${car.id}`);
+
+    const unavailable_dates = {
+      ...schedulesByCar.data.unavailable_dates,
+      ...dates,
+    };
+
+    await api.post(`/schedules_byuser`, {
+      user_id: 1,
+      car,
+      startDate: format(getPlatformDate(parseISO(dates[0])), "dd/MM/yyyy"),
+      endDate: format(
+        getPlatformDate(parseISO(dates[dates.length - 1])),
+        "dd/MM/yyyy"
+      ),
+    });
+
+    await api
+      .put(`/schedules_bycars/${car.id}`, {
+        id: car.id,
+        unavailable_dates,
+      })
+      .then(() => navigation.navigate("ScheludingComplete"))
+      .catch(() => Alert.alert("Não foi possível confirmar o agendamento."));
   }
 
   function handleBack() {
@@ -139,8 +165,8 @@ export function ScheludingDetails() {
         <RentalPrice>
           <RentalPriceLabel>TOTAL</RentalPriceLabel>
           <RentalPriceDetails>
-            <RentalPriceQuota>R$: 500 x3 diarias</RentalPriceQuota>
-            <RentalPriceTotal>R$: 2.900</RentalPriceTotal>
+            <RentalPriceQuota>{`R$: ${car.rent.price} x${dates.length} diarias`}</RentalPriceQuota>
+            <RentalPriceTotal>R$: {rentTotal}</RentalPriceTotal>
           </RentalPriceDetails>
         </RentalPrice>
       </Content>

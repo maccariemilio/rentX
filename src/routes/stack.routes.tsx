@@ -6,6 +6,7 @@ import { CarDetails } from "../screens/CarDetails";
 import { Scheluding } from "../screens/Scheluding";
 import { ScheludingDetails } from "../screens/ScheludingDetails";
 import { ScheludingComplete } from "../screens/ScheludingComplete";
+import { MyCars } from "../screens/MyCars";
 
 const { Navigator, Screen } = createStackNavigator();
 
@@ -21,6 +22,7 @@ export function StackRoutes() {
       <Screen name="Scheluding" component={Scheluding}></Screen>
       <Screen name="ScheludingDetails" component={ScheludingDetails}></Screen>
       <Screen name="ScheludingComplete" component={ScheludingComplete}></Screen>
+      <Screen name="MyCars" component={MyCars}></Screen>
     </Navigator>
   );
 }
