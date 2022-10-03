@@ -28,6 +28,7 @@ export const CarImageWrapper = styled.View`
   width: ${Dimensions.get("window").width}px;
   justify-content: center;
   align-items: center;
+  height: 132px;
 `;
 
 export const CarImage = styled.Image`
