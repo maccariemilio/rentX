@@ -29,6 +29,7 @@ import {
 } from "./styles";
 import { FlatList } from "react-native";
 import { Load } from "../../components/Load";
+import { LoadAnimation } from "../../components/LoadAnimation";
 interface CarProps {
   id: string;
   user_id: string;
@@ -71,7 +72,7 @@ export function MyCars() {
         <SubTitle>Conforto, segurança e praticidade.</SubTitle>
       </Header>
       {loading ? (
-        <Load></Load>
+        <LoadAnimation></LoadAnimation>
       ) : (
         <Content>
           <Appointments>

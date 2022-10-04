@@ -48,6 +48,7 @@ export function ImageSlider({ imagesUrl }: Props) {
         horizontal
         showsHorizontalScrollIndicator={false}
         onViewableItemsChanged={IndexChanged.current}
+        pagingEnabled={true}
       ></FlatList>
     </Container>
   );
