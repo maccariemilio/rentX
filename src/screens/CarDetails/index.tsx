@@ -123,9 +123,9 @@ export function CarDetails() {
           </Description>
 
           <Rent>
-            <Period>{car.rent.period}</Period>
+            <Period>{car.period}</Period>
 
-            <Price>{`R$ ${car.rent.price}`}</Price>
+            <Price>{`R$ ${car.price}`}</Price>
           </Rent>
         </Details>
         <Accessories>
@@ -148,6 +148,7 @@ export function CarDetails() {
         <Button
           title={"Escolher período do aluguel"}
           onPress={handleScheluding}
+          disabled={false}
         ></Button>
       </Footer>
     </Container>

@@ -59,6 +59,7 @@ interface RentalPeriod {
 }
 
 export function ScheludingDetails() {
+  const [loading, setLoading] = useState(false);
   const [rentalPeriod, setRentalPeriod] = useState<RentalPeriod>(
     {} as RentalPeriod
   );
@@ -66,9 +67,10 @@ export function ScheludingDetails() {
   const theme = useTheme();
   const route = useRoute();
   const { car, dates } = route.params as Params;
-  const rentTotal = Number(dates.length * car.rent.price);
+  const rentTotal = Number(dates.length * car.price);
 
   async function handleScheludingComplete() {
+    setLoading(true);
     const schedulesByCar = await api.get(`/schedules_bycars/${car.id}`);
 
     const unavailable_dates = {
@@ -91,8 +93,17 @@ export function ScheludingDetails() {
         id: car.id,
         unavailable_dates,
       })
-      .then(() => navigation.navigate("ScheludingComplete"))
-      .catch(() => Alert.alert("Não foi possível confirmar o agendamento."));
+      .then(() =>
+        navigation.navigate("Confirmation", {
+          nextScreenRoute: "Home",
+          title: "Carro Alugado",
+          message: `Agora vc so precisa ir\n ate a concessionara da RENTX\npegar seu automovel`,
+        })
+      )
+      .catch((erro) => {
+        setLoading(false);
+        Alert.alert("Não foi possível confirmar o agendamento.");
+      });
   }
 
   function handleBack() {
@@ -125,9 +136,9 @@ export function ScheludingDetails() {
           </Description>
 
           <Rent>
-            <Period>{car.rent.period}</Period>
+            <Period>{car.period}</Period>
 
-            <Price>{`R$ ${car.rent.price}`}</Price>
+            <Price>{`R$ ${car.price}`}</Price>
           </Rent>
         </Details>
         <Accessories>
@@ -165,7 +176,7 @@ export function ScheludingDetails() {
         <RentalPrice>
           <RentalPriceLabel>TOTAL</RentalPriceLabel>
           <RentalPriceDetails>
-            <RentalPriceQuota>{`R$: ${car.rent.price} x${dates.length} diarias`}</RentalPriceQuota>
+            <RentalPriceQuota>{`R$: ${car.price} x${dates.length} diarias`}</RentalPriceQuota>
             <RentalPriceTotal>R$: {rentTotal}</RentalPriceTotal>
           </RentalPriceDetails>
         </RentalPrice>
@@ -175,6 +186,8 @@ export function ScheludingDetails() {
           title={"Alugar Agora"}
           color={theme.colors.success}
           onPress={handleScheludingComplete}
+          disabled={loading ? true : false}
+          loading={loading}
         ></Button>
       </Footer>
     </Container>

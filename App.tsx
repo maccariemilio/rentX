@@ -19,6 +19,7 @@ import AppLoading from "expo-app-loading";
 import { theme } from "./styles/theme";
 import { StatusBar } from "react-native";
 import { ScheludingDetails } from "./src/screens/ScheludingDetails";
+import { AppProvider } from "./src/hooks";
 
 export default function App() {
   const [fontsLoaded] = useFonts({
@@ -39,7 +40,9 @@ export default function App() {
           backgroundColor="transparent"
           translucent
         ></StatusBar>
-        <Routes />
+        <AppProvider>
+          <Routes />
+        </AppProvider>
       </ThemeProvider>
     );
   }

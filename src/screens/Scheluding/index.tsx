@@ -2,7 +2,7 @@ import React, { useState } from "react";
 
 import { format, parseISO } from "date-fns";
 
-import { Alert } from "react-native";
+import { Alert, StatusBar } from "react-native";
 
 import {
   NavigationProp,
@@ -105,6 +105,11 @@ export function Scheluding() {
 
   return (
     <Container>
+      <StatusBar
+        barStyle="light-content"
+        backgroundColor="transparent"
+        translucent
+      ></StatusBar>
       <Header>
         <BacKButton
           onPress={handleBack}
@@ -141,7 +146,11 @@ export function Scheluding() {
       </Content>
 
       <Footer>
-        <Button title={"Confirmar"} onPress={handleScheludingDetails}></Button>
+        <Button
+          title={"Confirmar"}
+          onPress={handleScheludingDetails}
+          disabled={!rentalPeriod.startFormatted}
+        ></Button>
       </Footer>
     </Container>
   );
