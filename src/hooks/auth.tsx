@@ -1,5 +1,13 @@
-import { useContext, useState, createContext, ReactNode } from "react";
+import {
+  useContext,
+  useState,
+  createContext,
+  ReactNode,
+  useEffect,
+} from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { api } from "../services/api";
+import { setDate } from "date-fns/esm";
 
 interface User {
   id: string;
@@ -20,8 +28,9 @@ interface SignInCredenctials {
 }
 
 interface AuthContextData {
-  user: User;
+  user: User | undefined;
   signIn: (credentials: SignInCredenctials) => Promise<void>;
+  signOut: () => void;
 }
 
 interface AuthProviderProps {
@@ -31,22 +40,36 @@ interface AuthProviderProps {
 const AuthContext = createContext<AuthContextData>({} as AuthContextData);
 
 function AuthProvider({ children }: AuthProviderProps) {
-  const [data, setData] = useState<AuthState>({} as AuthState);
+  const [data, setData] = useState<User | any>({} as User);
 
   async function signIn({ email, password }: SignInCredenctials) {
-    const response = await api.post("/sessions", {
-      email,
-      password,
-    });
-    const { token, user } = response.data;
-    api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-    setData({ token, user });
+    try {
+      const response = await api.post("/sessions", {
+        email,
+        password,
+      });
+      const token = response.data.token;
+      const user = response.data.user;
+      api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+      setData(user);
+      await AsyncStorage.setItem("@storage_Key", token);
+      await AsyncStorage.setItem("user@id", data?.id);
+    } catch (error) {
+      console.log(error);
+    }
   }
+
+  const signOut = async () => {
+    setData(null);
+    AsyncStorage.clear();
+  };
+
   return (
     <AuthContext.Provider
       value={{
-        user: data.user,
+        user: data,
         signIn,
+        signOut,
       }}
     >
       {children}
@@ -58,4 +81,5 @@ function useAuth(): AuthContextData {
 
   return context;
 }
+
 export { AuthProvider, useAuth };

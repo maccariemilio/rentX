@@ -41,7 +41,6 @@ export function SignIn() {
       });
       await schema.validate({ email, password });
       Alert.alert("tudo certo");
-
       signIn({ email, password });
     } catch (error) {
       if (error instanceof Yup.ValidationError) {
